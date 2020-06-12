@@ -1,7 +1,10 @@
-# OptiHack
-My hackintosh journey with the Dell Optiplex 7020 SFF/MT.
+# Hackintosh on DELL Optiplex 9020/SFF/MT/USFF/Micro
 
-<sub>Should also work on 9020 SFF and MT models without additional modifications. For the 9020 USFF you need to create a usb portmap post-install. The 9020 micro needs the same and possibly more modifications, I have no experience with that model. The 7020 was only available in SFF and MT form-factor.</sub>
+This is forked from https://github.com/zearp/OptiHack. Based on his work I ported it to 9020 SFF/MT/USFF/Micro, and all models worked fine. Due to diffrent mother board versions , I stronly sugguested you to create a usb portmap post-install. 
+
+As of now, this repo is almost the same as the upstream repo, except that: 
+
+* Added 4K support for the internal HD4600.
 
 ![Screenshot](https://github.com/zearp/optihack/blob/master/images/mmk.png)
 
@@ -85,10 +88,10 @@ Once rebooted and back in the OpenCore picker select modGRUBShell.efi and press 
 > Note: It is always a good idea to verify these offsets yourself by extracting the BIOS, check how to do it with [this](https://github.com/JimLee1996/Hackintosh_OptiPlex_9020) guide. The default values can be found in files in the [text](https://github.com/zearp/OptiHack/tree/master/text) folder. The old and new values will also be printed when you change them. These patches have no influence on other operating systems. If anything it will make them better.
 
 ## Disable CFG Lock
-To disable CFG Lock you can either use a [quirk](https://dortania.github.io/OpenCore-Desktop-Guide/extras/msr-lock.html) in OpenCore or disable it properly. We will disable it. Entering ```setup_var 0xDA2 0x0``` will disable CFG Lock. To revert simply execute the command again but replace 0x0 with 0x1. This also applies to the other changes we need to make here. In the files with values I link to you can also find the default setting of each in case you want to revert to stock.
+To disable CFG Lock you can either use a [quirk](https://dortania.github.io/OpenCore-Desktop-Guide/extras/msr-lock.html) in OpenCore or disable it properly. We will disable it. Entering ```setup_var 0xDA2 0x0``` will disable CFG Lock. For 9020 micro model, you should use ```setup_var 0xD9F 0x0```. To revert simply execute the command again but replace 0x0 with 0x1. This also applies to the other changes we need to make here. In the files with values I link to you can also find the default setting of each in case you want to revert to stock.
 
 ## Set DVMT pre-alloc to 64MB
-Next up we need to set the DVMT pre-alloc to 64MB, which macOS likes. Enter ```setup_var 0x263 0x2``` to change it. By default it's set to 0x1 which is 32MB. If you're planning to run dual (4k) screens you can set the pre-alloc higher than 64MB. Changing it to 0x3 (96MB) or 0x4 (128MB) could help. I've tested these larger pre-alloc sizes in a non-4k dual screen setup and while they work I did not notice any differences. There are [more sizes](https://github.com/zearp/optihack/blob/master/text/CFGLock_DVMT.md) to set here but 64MB should be fine for pretty much everyone.
+Next up we need to set the DVMT pre-alloc to 64MB, which macOS likes. Enter ```setup_var 0x263 0x2``` to change it. By default it's set to 0x1 which is 32MB. If you're planning to run dual (4k) screens you can set the pre-alloc not lower than 64MB. Changing it to 0x3 (96MB) or 0x4 (128MB) could help. I've tested these larger pre-alloc sizes in a non-4k dual screen setup and while they work I did not notice any differences. There are [more sizes](https://github.com/zearp/optihack/blob/master/text/CFGLock_DVMT.md) to set here but 64MB should be fine for pretty much everyone.
 
 > Please note: Changing the pre-alloc size is not really needed but highly recommended, if you don't want to do this you ***must*** apply the DMVT pre-alloc 32MB patch found in Hackintool to the config or else you will get a panic on boot.
 
